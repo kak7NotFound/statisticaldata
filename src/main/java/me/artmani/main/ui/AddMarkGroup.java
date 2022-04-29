@@ -20,7 +20,6 @@ public class AddMarkGroup extends JFrame {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Allan
-        label8 = new JLabel();
         label15 = new JLabel();
         comboBox3 = new JComboBox();
         label16 = new JLabel();
@@ -32,12 +31,8 @@ public class AddMarkGroup extends JFrame {
         button1 = new JButton();
 
         //======== this ========
+        setTitle("\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u0446\u0435\u043d\u043a\u0443");
         var contentPane = getContentPane();
-
-        //---- label8 ----
-        label8.setText("\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043e\u0446\u0435\u043d\u043a\u0443");
-        label8.setHorizontalAlignment(SwingConstants.CENTER);
-        label8.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         //---- label15 ----
         label15.setText("\u0413\u0440\u0443\u043f\u043f\u0430:");
@@ -61,49 +56,45 @@ public class AddMarkGroup extends JFrame {
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(label16, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label17, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label8, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addGroup(contentPaneLayout.createParallelGroup()
                                 .addComponent(label15, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(comboBox3, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(comboBox3, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label16, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(label18, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(calendar2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(88, Short.MAX_VALUE))
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(button1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(label18, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(calendar2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addContainerGap(27, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label8)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addComponent(label15)
                             .addGap(4, 4, 4)
                             .addComponent(comboBox3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addGap(8, 8, 8)
-                            .addComponent(label16))
+                            .addComponent(label16)
+                            .addGap(4, 4, 4)
+                            .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addGap(6, 6, 6)
+                            .addComponent(label17)
+                            .addGap(4, 4, 4)
+                            .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addComponent(label18)
                             .addGap(6, 6, 6)
-                            .addComponent(calendar2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(button1, GroupLayout.Alignment.TRAILING))
-                    .addGap(4, 4, 4)
-                    .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGap(6, 6, 6)
-                    .addComponent(label17)
-                    .addGap(4, 4, 4)
-                    .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(52, Short.MAX_VALUE))
+                            .addComponent(calendar2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(button1)))
+                    .addContainerGap(33, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -112,7 +103,6 @@ public class AddMarkGroup extends JFrame {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Allan
-    private JLabel label8;
     private JLabel label15;
     private JComboBox comboBox3;
     private JLabel label16;

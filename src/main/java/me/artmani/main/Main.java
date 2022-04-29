@@ -10,9 +10,10 @@ public class Main {
     @Getter
     static Database database;
     public static void main(String[] args) {
-        new MainFrame().setVisible(true);
         try {
             database = new Database();
         } catch (SQLException e) {e.printStackTrace();}
+        new MainFrame().setVisible(true);
+
     }
 }

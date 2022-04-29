@@ -4,42 +4,42 @@
 
 package me.artmani.main.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import com.toedter.calendar.*;
-import lombok.Setter;
-
 import javax.swing.*;
-import javax.swing.GroupLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * @author Allan
  */
 public class DataAdditionForm extends JFrame {
 
-    static boolean isOpen = false;
     public DataAdditionForm() {
         initComponents();
     }
 
     private void thisWindowClosing(WindowEvent e) {
-        DataAdditionForm.isOpen = false;
+        setVisible(false);
     }
 
     private void button1ButtonEvent(ActionEvent e) {
         new AddGroupForm().setVisible(true);
+        setVisible(false);
     }
 
     private void button2ButtonEvent(ActionEvent e) {
         new AddStudentForm().setVisible(true);
+        setVisible(false);
     }
 
     private void button3ButtonEvent(ActionEvent e) {
         new AddMarkGroup().setVisible(true);
+        setVisible(false);
     }
 
     private void button4ButtonEvent(ActionEvent e) {
         new AddSubjectForm().setVisible(true);
+        setVisible(false);
     }
 
     private void initComponents() {
@@ -80,36 +80,36 @@ public class DataAdditionForm extends JFrame {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGap(65, 65, 65)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createParallelGroup()
-                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(button3, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(button1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(button4, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label1, GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                    .addContainerGap())
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addGap(65, 65, 65)
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createParallelGroup()
+                                                .addComponent(button2, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(button3, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(button1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(button4, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(label1, GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
+                                .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addGroup(contentPaneLayout.createParallelGroup()
+                contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(28, 28, 28)
-                            .addComponent(label1))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(11, 11, 11)
-                            .addComponent(button1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(button2)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(button3)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(button4)))
-                    .addContainerGap(16, Short.MAX_VALUE))
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addGap(28, 28, 28)
+                                                .addComponent(label1))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addGap(11, 11, 11)
+                                                .addComponent(button1)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(button2)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(button3)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(button4)))
+                                .addContainerGap(16, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());

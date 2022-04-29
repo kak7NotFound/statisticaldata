@@ -5,8 +5,10 @@
 package me.artmani.main.ui;
 
 import java.awt.event.*;
+import me.artmani.main.Main;
+
 import javax.swing.*;
-import javax.swing.GroupLayout;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Allan
@@ -14,12 +16,26 @@ import javax.swing.GroupLayout;
 public class MainFrame extends JFrame {
     public MainFrame() {
         initComponents();
+        refreshData();
     }
 
     private void button2Event(ActionEvent e) {
-        if (DataAdditionForm.isOpen) return;
-        DataAdditionForm.isOpen = true;
         new DataAdditionForm().setVisible(true);
+    }
+
+    public void refreshData(){
+        try {
+            var rs = Main.getDatabase().getResultSet("select count(*) from Groups");
+            textField1.setText(rs.getString(1));
+            rs = Main.getDatabase().getResultSet("select count(*) from Students");
+            textField2.setText(rs.getString(1));
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    private void thisWindowGainedFocus(WindowEvent e) {
+        refreshData();
     }
 
     private void initComponents() {
@@ -34,6 +50,12 @@ public class MainFrame extends JFrame {
 
         //======== this ========
         setTitle("\u041b\u0443\u0447\u043a\u0438\u0432 \u0410\u0440\u0442\u0435\u043c | \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043a\u0430\u044f \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0430 \u0434\u0430\u043d\u043d\u044b\u0445");
+        addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                thisWindowGainedFocus(e);
+            }
+        });
         var contentPane = getContentPane();
 
         //---- button1 ----

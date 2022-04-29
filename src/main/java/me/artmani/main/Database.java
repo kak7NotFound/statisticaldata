@@ -8,23 +8,17 @@ public class Database {
 
     public Database() throws SQLException {
 
-        String url = "jdbc:sqlite:C:\\Users\\kak7\\Documents\\GitHub\\statisticaldata\\studentData.db";
+        String url = "jdbc:sqlite:C:\\Users\\kaks\\Documents\\GitHub\\statisticaldata\\studentData.sqlite";
         connection = DriverManager.getConnection(url);
         connection.setAutoCommit(true);
-
     }
 
     public void executeQuery(String query) throws SQLException {
-
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(query);
+        connection.createStatement().executeUpdate(query);
     }
 
     public ResultSet getResultSet(String query) throws SQLException {
-
-        Statement statement = connection.createStatement();
-        return statement.executeQuery(query);
-
+        return connection.createStatement().executeQuery(query);
     }
 
 

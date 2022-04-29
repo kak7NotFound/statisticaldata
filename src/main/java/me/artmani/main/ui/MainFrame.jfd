@@ -9,6 +9,7 @@ new FormModel {
 		} ) {
 			name: "this"
 			"title": "Лучкив Артем | Статистическая обработка данных"
+			addEvent( new FormEvent( "java.awt.event.WindowFocusListener", "windowGainedFocus", "thisWindowGainedFocus", true ) )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button1"
 				"text": "Просмотр Статистики"

@@ -4,16 +4,18 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq {par l {seq l {comp label10:::p:152:p, space :36:36:p, comp label12:::p:152:p}, seq l {comp comboBox2:::p:152:p, space :36:36:p, comp textField3:::p:152:p}, seq l {comp label11:::p:152:p, space :36:36:p, comp label13:::p:152:p}, comp label14:::p:152:p}, space :0:82:x}, seq {par l {seq {par t {comp comboBox6::l:p:152:p, comp textField4::l:p:152:p}, space :p:60:p, comp calendar1:::p::p}, seq l {space :p:74:p, par t:::p {comp button4::l:::x, comp button2::l:p:262:p}}}, space ::44:x}}}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp label10:::p::p, comp label12:::p::p}, space :4:4:p, par l {comp comboBox2:::p::p, seq l {space :2:2:p, comp textField3:::p::p}}, space :4:4:p, par l {comp label11:::p::p, seq l {space :2:2:p, comp label13:::p::p}}, space :6:6:p, par l {seq l {comp comboBox6:::p::p, space :11:11:p, comp label14:::p::p, space :::p, comp textField4:::p::p}, seq l {space :p:7:p, comp calendar1:::p::p}}, space :::p, comp button2:::p::p, space :::p, comp button4:::p::p, space ::32:x}}"
+			"$horizontalGroup": "par l {seq t {space ::81:x, par t:::p {comp button4::l:::x, comp button2::l:p:262:p}, space :p:40:p}, seq {space :::p, par l {seq {par l {comp label10::l:p:152:p, comp comboBox2::l:p:152:p, comp label11::l:p:152:p, comp comboBox6::l:p:152:p}, space :36:36:p, par l {comp label12::l:p:152:p, comp textField3::l:p:152:p, comp calendar1:::p::p, comp label13:::p:152:p}, space :0:22:x}, seq {par l {comp label14::l:p:152:p, comp textField4::l:p:152:p}, space ::225:x}}}}"
+			"$verticalGroup": "par l {seq {space u:::p, par l {comp label10:::p::p, comp label12:::p::p}, space :4:4:p, par l {comp comboBox2:::p::p, seq l {space :2:2:p, comp textField3:::p::p}}, space :4:4:p, par l {seq l {comp label13:::p::p, space :::p, comp calendar1:::p::p}, seq l {comp label11:::p::p, space :p:8:p, comp comboBox6:::p::p, space :::p, comp label14:::p::p, space :::p, comp textField4:::p::p}}, space :::p, comp button2:::p::p, space :::p, comp button4:::p::p, space ::37:x}}"
 		} ) {
 			name: "this"
+			"title": "Добавить студента "
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label10"
 				"text": "Группа:"
 			} )
 			add( new FormComponent( "javax.swing.JComboBox" ) {
 				name: "comboBox2"
+				"editable": true
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label11"
@@ -53,7 +55,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 5 )
-			"size": new java.awt.Dimension( 430, 315 )
+			"size": new java.awt.Dimension( 385, 315 )
 		} )
 	}
 }
