@@ -1,0 +1,41 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "11.0.14.1" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :p:65:p, par l {par l:t {comp button2:::p:177:p, comp button3::l:p:177:p}, comp button1::t:p:177:p, comp button4::l:p:177:p}, space :::p, comp label1::::54:x, space :::p}}"
+			"$verticalGroup": "par l {seq {par l {seq {space :p:28:p, comp label1:::p::p}, seq l {space :p:11:p, comp button1:::p::p, space u:::p, comp button2:::p::p, space u:::p, comp button3:::p::p, space u:::p, comp button4:::p::p}}, space ::16:x}}"
+		} ) {
+			name: "this"
+			"title": "Добавление данных"
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Добавить группу"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1ButtonEvent", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"text": "Добавить студента"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ButtonEvent", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button3"
+				"text": "Добавить оценку"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3ButtonEvent", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button4"
+				"text": "Добавить предмет"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4ButtonEvent", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 310, 215 )
+		} )
+	}
+}

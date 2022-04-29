@@ -1,0 +1,48 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "11.0.14.1" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp textField1:::p:206:p, comp label2::l:p:206:p, comp label1::l:p:206:p, comp textField2::l:p:206:p, par l:l::p {comp button1::::206:x, comp button2::l::206:x}}, space ::11:x}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp label1:::p::p, space :::p, comp textField1:::p::p, space :::p, comp label2:::p::p, space :::p, comp textField2:::p::p, space s:::p, comp button2:::p:50:p, space :::p, comp button1:::p:50:p, space ::8:x}}"
+		} ) {
+			name: "this"
+			"title": "Лучкив Артем | Статистическая обработка данных"
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Просмотр Статистики"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"text": "Добавить данные"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2Event", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Всего групп:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField1"
+				"editable": false
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Всего студентов:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField2"
+				"editable": false
+				auxiliary() {
+					"JavaCodeGenerator.variableModifiers": 1
+				}
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 225, 280 )
+		} )
+	}
+}

@@ -1,0 +1,43 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "11.0.14.1" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {seq {space :p:47:p, par l:::p {comp label5:::::x, comp comboBox1::l:::x, comp textField1::l:::x, comp label6::t:::x, comp button1::t:::x, comp button2::l:p:175:p}}, seq l {space :p:72:p, comp label1:::p::p}}, space ::56:x}}"
+			"$verticalGroup": "par l {seq {space :p:24:p, comp label5:::p::p, space :p:4:p, comp comboBox1:::p::p, space :::p, comp label6:::p::p, space :::p, comp textField1:::p::p, space s:::p, comp button1:::p::p, space :::p, comp button2:::p::p, space :::p, comp label1:::p::p, space :::x}}"
+		} ) {
+			name: "this"
+			"title": "Добавить группу"
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox1"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Группа:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "Курс"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Добавить / изменить"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"text": "Удалить группу"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "(вместе с студентами)"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 280, 270 )
+		} )
+	}
+}
