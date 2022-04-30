@@ -4,17 +4,104 @@
 
 package me.artmani.main.ui;
 
-import java.awt.*;
+import com.toedter.calendar.JCalendar;
+import lombok.SneakyThrows;
+import me.artmani.main.Main;
+
 import javax.swing.*;
-import javax.swing.GroupLayout;
-import com.toedter.calendar.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Allan
  */
 public class AddStudentForm extends JFrame {
+
+    ArrayList<Integer> month = new ArrayList<Integer>();
     public AddStudentForm() {
         initComponents();
+        refreshData();
+
+        month.add(Calendar.JANUARY);
+    }
+
+    @SneakyThrows
+    public void refreshData() {
+        var rs = Main.getDatabase().getResultSet("select groupId from Groups");
+        comboBox2.removeAllItems();
+        comboBox6.removeAllItems();
+        calendar1.setDate(new Date(Calendar.YEAR+121, Calendar.FEBRUARY, 15));
+
+
+        if (rs.isClosed()) return;
+        while (rs.next()) {
+            comboBox2.addItem(rs.getString(1));
+        }
+//        comboBox6ItemStateChanged(null);
+    }
+
+    @SneakyThrows
+    private void comboBox6ItemStateChanged(ItemEvent e) {
+        // student selection
+        var rs = Main.getDatabase().getResultSet("select * from Students where name = '%s'".formatted(comboBox6.getSelectedItem()));
+        textField4.setText("");
+        textField3.setText("");
+        calendar1.setDate(new Date(Calendar.YEAR+121, Calendar.FEBRUARY, 15));
+
+        if (rs.isClosed()) return;
+
+        while (rs.next()) {
+            textField4.setText(rs.getString(5));
+            textField3.setText(rs.getString(3));
+            var date = rs.getString(4).split("\\.");
+            calendar1.setDate(new Date(Integer.parseInt(date[2]) - 1900, 0, Integer.parseInt(date[0])));
+        }
+
+    }
+
+    @SneakyThrows
+    private void comboBox2ItemStateChanged(ItemEvent e) {
+        // group selection
+        var rs = Main.getDatabase().getResultSet("select * from Students where groupId = '%s'".formatted(comboBox2.getSelectedItem()));
+        comboBox6.removeAllItems();
+        textField4.setText("");
+        textField3.setText("");
+        calendar1.setDate(new Date(Calendar.YEAR+121, Calendar.FEBRUARY, 15));
+
+        if (rs.isClosed()) return;
+
+        while (rs.next()) {
+            comboBox6.addItem(rs.getString(1));
+            textField4.setText(rs.getString(5));
+            textField3.setText(rs.getString(3));
+            var date = rs.getString(4).split("\\.");
+            calendar1.setDate(new Date(Integer.parseInt(date[2]) - 1900, 0, Integer.parseInt(date[0])));
+        }
+    }
+
+    @SneakyThrows
+    private void button2Event(ActionEvent e) {
+
+        var rs = Main.getDatabase().getResultSet("select * from Students where name = '%s' and groupId = %s".formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem()));
+        if (rs.isClosed()) {
+            Main.getDatabase().executeQuery("insert into Students (name, groupId, phoneNumber, birthday, homeAddress) VALUES ('%s', %s, '%s', '%s', '%s')"
+                    .formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem(), textField3.getText(), calendar1.getDate().getDay() + "." + calendar1.getDate().getMonth() + "." + (calendar1.getDate().getYear() + 1900), textField4.getText()));
+        } else {
+            Main.getDatabase().executeQuery("update Students set name = '%s', groupId = %s, phoneNumber = '%s', birthday = '%s', homeAddress = '%s' where name = '%s' and groupId = %s"
+                    .formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem(), textField3.getText(), calendar1.getDate().getDay() + "." + calendar1.getDate().getMonth() + "." + (calendar1.getDate().getYear() + 1900), textField4.getText(), comboBox6.getSelectedItem(), comboBox2.getSelectedItem()));
+        }
+        refreshData();
+    }
+
+    @SneakyThrows
+    private void button4Event(ActionEvent e) {
+        Main.getDatabase().executeQuery("delete from Students where name = '%s' and groupId = %s"
+                .formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem()));
+        refreshData();
     }
 
     private void initComponents() {
@@ -42,12 +129,14 @@ public class AddStudentForm extends JFrame {
 
         //---- comboBox2 ----
         comboBox2.setEditable(true);
+        comboBox2.addItemListener(e -> comboBox2ItemStateChanged(e));
 
         //---- label11 ----
         label11.setText("\u0418\u043c\u044f");
 
         //---- button2 ----
         button2.setText("\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c / \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c");
+        button2.addActionListener(e -> button2Event(e));
 
         //---- label12 ----
         label12.setText("\u041d\u043e\u043c\u0435\u0440 \u0442\u0435\u043b\u0435\u0444\u043e\u043d\u0430");
@@ -58,8 +147,13 @@ public class AddStudentForm extends JFrame {
         //---- label14 ----
         label14.setText("\u041c\u0435\u0441\u0442\u043e \u0436\u0438\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u0430");
 
+        //---- comboBox6 ----
+        comboBox6.setEditable(true);
+        comboBox6.addItemListener(e -> comboBox6ItemStateChanged(e));
+
         //---- button4 ----
         button4.setText("\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0441\u0442\u0443\u0434\u0435\u043d\u0442\u0430");
+        button4.addActionListener(e -> button4Event(e));
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -86,7 +180,7 @@ public class AddStudentForm extends JFrame {
                                 .addComponent(textField3, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(calendar1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(label13, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE))
-                            .addGap(0, 22, Short.MAX_VALUE))
+                            .addGap(0, 23, Short.MAX_VALUE))
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addGroup(contentPaneLayout.createParallelGroup()
                                 .addComponent(label14, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)

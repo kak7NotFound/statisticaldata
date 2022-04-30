@@ -1,0 +1,58 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "11.0.14.1" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp label17:::p:152:p, seq l {par l {comp label15::l:p:152:p, comp comboBox3::l:p:152:p, comp label16::l:p:152:p, comp comboBox4::l:p:152:p}, space :::p, par t:::p {comp button1:::::x, comp label18::l:p:152:p, comp calendar2::t:::x}}, par t:l::p {seq l {comp label19:::p:48:p, space :::p, comp spinner1:::::x}, seq l {space :p:2:p, comp comboBox5:::p:152:p}}}, space ::28:x}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {seq l {comp label15:::p::p, space :4:4:p, comp comboBox3:::p::p, space :p:8:p, comp label16:::p::p, space :4:4:p, comp comboBox4:::p::p, space :6:6:p, comp label17:::p::p, space :4:4:p, comp comboBox5:::p::p, space :::x, par b {comp label19::b:p::p, comp spinner1::b:p::p}, space :p:7:p}, seq l {comp label18:::p::p, space :6:6:p, comp calendar2:::p::p, space s:::p, comp button1:::p::p, space :27::x}}}}"
+		} ) {
+			name: "this"
+			"title": "Добавить оценку"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label15"
+				"text": "Группа:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox3"
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "comboBox3ItemStateChanged", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label16"
+				"text": "Студент:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox4"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label17"
+				"text": "Предмет:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox5"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label18"
+				"text": "Дата"
+			} )
+			add( new FormComponent( "com.toedter.calendar.JCalendar" ) {
+				name: "calendar2"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Добавить"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1Event", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "spinner1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label19"
+				"text": "Оценка:"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 360, 235 )
+		} )
+	}
+}

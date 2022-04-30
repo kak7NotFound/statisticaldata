@@ -38,6 +38,10 @@ public class MainFrame extends JFrame {
         refreshData();
     }
 
+    private void thisWindowClosing(WindowEvent e) {
+        System.exit(0);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Allan
@@ -54,6 +58,12 @@ public class MainFrame extends JFrame {
             @Override
             public void windowGainedFocus(WindowEvent e) {
                 thisWindowGainedFocus(e);
+            }
+        });
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                thisWindowClosing(e);
             }
         });
         var contentPane = getContentPane();

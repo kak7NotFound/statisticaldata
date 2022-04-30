@@ -24,22 +24,22 @@ public class DataAdditionForm extends JFrame {
 
     private void button1ButtonEvent(ActionEvent e) {
         new AddGroupForm().setVisible(true);
-        setVisible(false);
+        dispose();
     }
 
     private void button2ButtonEvent(ActionEvent e) {
         new AddStudentForm().setVisible(true);
-        setVisible(false);
+        dispose();
     }
 
     private void button3ButtonEvent(ActionEvent e) {
-        new AddMarkGroup().setVisible(true);
-        setVisible(false);
+        new AddMarkForm().setVisible(true);
+        dispose();
     }
 
     private void button4ButtonEvent(ActionEvent e) {
         new AddSubjectForm().setVisible(true);
-        setVisible(false);
+        dispose();
     }
 
     private void initComponents() {
