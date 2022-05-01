@@ -1,0 +1,143 @@
+JFDML JFormDesigner: "7.0.5.1.409" Java: "11.0.14.1" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq {par l {comp label1::l:p::p, comp comboBox1::l:p::p}, space :p:32:p, par l {seq {comp comboBox2:::p::p, space :::p, comp comboBox3:::p::p}, comp label2:::p::p}}, seq l {par l {comp label3::l:p::p, comp comboBox4::l:p::p, comp label4::l:p::p, comp textField1::l:p:90:p, comp label5::l:p::p, comp textField2::l:p:90:p}, space :p:48:p, par l {comp comboBox5::l:p::p, comp label6::l:p::p, comp label8::l:p::p, comp textField4::l:p:90:p, comp label7::l:p::p, comp textField3::l:p:90:p, comp label9:::p::p, comp textField5:::p:90:p}, space :35:35:p, par l {comp label11:::p::p, seq l {comp label15:::p::p, space s:::p, comp textField10:::p:100:p}, comp comboBox6::l:p::p, seq l {par l {comp label12::l:p::p, comp textField7::l:p:90:p, seq l {space :p:1:p, comp textField6:::p:90:p}, comp label10::l:p::p, comp label16::l:p::p}, par l {seq l {space :p:15:p, par l {comp label17::l:p::p, comp label13::l:p::p}}, seq l {space u:::p, comp textField8:::p:90:p}, seq l {space :p:12:p, comp label14:::p::p}, seq l {space u:::p, comp textField9:::p:90:p}}}}}}, space ::25:x}}"
+			"$verticalGroup": "par l {seq l {space :::p, par b {comp label1::b:p::p, comp label2::b:p::p}, space :::p, par b {comp comboBox1::b:p::p, comp comboBox2::b:p::p, comp comboBox3::b:p::p}, space :::p, par t {seq t {comp label3:::p::p, space :::p, comp comboBox4:::p::p}, seq t {comp label6:::p:16:p, space :::p, comp comboBox5:::p::p}, seq t {comp label11:::p::p, space :::p, comp comboBox6:::p::p}}, space :::p, par l {seq l {comp label4:::p::p, space :::p, comp textField1:::p::p, space :::p, par l {seq l {par l {seq l {comp label5:::p::p, space :6:6:p, comp textField2:::p::p}, seq l {comp label8:::p::p, space :6:6:p, comp textField4:::p::p}}, space :p:12:p, comp label9:::p::p, space :6:6:p, comp textField5:::p::p}, seq l {par b {comp label10::b:p::p, comp label13::b:p::p}, space :::p, par b {comp textField6::b:p::p, comp textField8::b:p::p}, space :::p, par b {comp label12::b:p::p, comp label14::b:p::p}, space :::p, par b {comp textField7::b:p::p, comp textField9::b:p::p}}}}, seq l {par b {comp label7::b:p::p, comp label15::b:p::p, comp textField10::b:p::p}, space :6:6:p, par b {comp textField3::b:p::p, comp label16::b:p::p, comp label17::b:p::p}}}, space :::p}}"
+		} ) {
+			name: "this"
+			"title": "Статистика"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Тип времени:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Диапозон:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox1"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox2"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox3"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Группа:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox4"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Всего студентов:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField1"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Всего предметов:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField2"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox5"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "Студент:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "Полное имя:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField3"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label8"
+				"text": "Телефонный номер:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField4"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label9"
+				"text": "Место жительства:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField5"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label10"
+				"text": "Всего оценок:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField6"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label11"
+				"text": "Предмет:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "comboBox6"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label12"
+				"text": "Средняя оценка:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField7"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField8"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label13"
+				"text": "Всего оценок:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label14"
+				"text": "Средняя оценка:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField9"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label15"
+				"text": "Преподаватель:"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField10"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label16"
+				"text": "По группе:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label17"
+				"text": "По студенту:"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 535, 340 )
+		} )
+	}
+}

@@ -42,6 +42,10 @@ public class MainFrame extends JFrame {
         System.exit(0);
     }
 
+    private void button1Event(ActionEvent e) {
+        new ViewStatisticsForm().setVisible(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Allan
@@ -70,6 +74,7 @@ public class MainFrame extends JFrame {
 
         //---- button1 ----
         button1.setText("\u041f\u0440\u043e\u0441\u043c\u043e\u0442\u0440 \u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0438");
+        button1.addActionListener(e -> button1Event(e));
 
         //---- button2 ----
         button2.setText("\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0434\u0430\u043d\u043d\u044b\u0435");
