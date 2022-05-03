@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Fri Apr 29 13:31:27 MSK 2022
- */
-
 package me.artmani.main.ui;
 
 import java.awt.event.*;
@@ -12,9 +8,6 @@ import com.toedter.calendar.*;
 import lombok.SneakyThrows;
 import me.artmani.main.Main;
 
-/**
- * @author Allan
- */
 public class AddMarkForm extends JFrame {
     public AddMarkForm() {
         initComponents();

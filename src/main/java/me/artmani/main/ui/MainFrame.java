@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Thu Apr 28 10:46:53 MSK 2022
- */
-
 package me.artmani.main.ui;
 
 import java.awt.event.*;
@@ -10,9 +6,6 @@ import me.artmani.main.Main;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-/**
- * @author Allan
- */
 public class MainFrame extends JFrame {
     public MainFrame() {
         initComponents();

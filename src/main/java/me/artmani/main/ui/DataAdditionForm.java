@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Fri Apr 29 11:37:36 MSK 2022
- */
-
 package me.artmani.main.ui;
 
 import javax.swing.*;
@@ -9,9 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-/**
- * @author Allan
- */
 public class DataAdditionForm extends JFrame {
 
     public DataAdditionForm() {

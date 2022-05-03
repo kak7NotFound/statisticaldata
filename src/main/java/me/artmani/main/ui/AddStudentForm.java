@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Fri Apr 29 13:31:35 MSK 2022
- */
-
 package me.artmani.main.ui;
 
 import com.toedter.calendar.JCalendar;
@@ -16,9 +12,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * @author Allan
- */
 public class AddStudentForm extends JFrame {
 
     ArrayList<Integer> month = new ArrayList<Integer>();

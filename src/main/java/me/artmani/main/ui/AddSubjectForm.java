@@ -1,7 +1,3 @@
-/*
- * Created by JFormDesigner on Fri Apr 29 13:31:56 MSK 2022
- */
-
 package me.artmani.main.ui;
 
 import java.awt.event.*;
@@ -12,9 +8,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-/**
- * @author Allan
- */
 public class AddSubjectForm extends JFrame {
     public AddSubjectForm() {
         initComponents();

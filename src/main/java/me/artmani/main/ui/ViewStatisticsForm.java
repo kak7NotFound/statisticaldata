@@ -1,18 +1,84 @@
-/*
- * Created by JFormDesigner on Sun May 01 19:23:26 MSK 2022
- */
-
 package me.artmani.main.ui;
 
+import lombok.SneakyThrows;
+import me.artmani.main.Main;
+
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.*;
 import javax.swing.GroupLayout;
-
-/**
- * @author Allan
- */
 public class ViewStatisticsForm extends JFrame {
+
+    HashMap<String, ArrayList<String>> data = new HashMap<>();
+    boolean hadInit = false;
     public ViewStatisticsForm() {
         initComponents();
+        setData();
+    }
+
+    @SneakyThrows
+    private void setData(){
+
+        var params = new ArrayList<String>();
+        var rs = Main.getDatabase().getResultSet("select date from Marks");
+
+        // год
+        while (rs.next()){
+            var year = Integer.parseInt(rs.getString(1).split("\\.")[2]) + 1900;
+            if (params.contains(year+"")){
+                continue;
+            }
+            params.add(year+"");
+        }
+        data.put("Год", (ArrayList<String>) params.clone());
+
+        params.clear();
+        rs.moveToInsertRow();
+
+        // семестр
+        while (rs.next()){
+            var year = Integer.parseInt(rs.getString(1).split("\\.")[2]) + 1900;
+            if (params.contains(year+"")){
+                continue;
+            }
+            params.add(year+"");
+        }
+
+
+
+
+
+
+
+
+
+        hadInit = true;
+
+        for (String a: new String[]{"Год", "Семестр", "Месяц", "Диапозон"}){
+            comboBox1.addItem(a);
+        }
+    }
+
+
+    private void comboBox1ItemStateChanged(ItemEvent e) {
+
+        if (!hadInit) return;
+
+        comboBox2.removeAllItems();
+        switch (comboBox1.getSelectedItem().toString()){
+            case "Год":
+                for (String d: data.get("Год")){
+                    comboBox2.addItem(d);
+                }
+                break;
+            case "Семестр":
+                break;
+            case "Месяц":
+                break;
+            case "Диапозон":
+                break;
+        }
     }
 
     private void initComponents() {
@@ -51,6 +117,7 @@ public class ViewStatisticsForm extends JFrame {
         textField10 = new JTextField();
         label16 = new JLabel();
         label17 = new JLabel();
+        button1 = new JButton();
 
         //======== this ========
         setTitle("\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430");
@@ -61,6 +128,12 @@ public class ViewStatisticsForm extends JFrame {
 
         //---- label2 ----
         label2.setText("\u0414\u0438\u0430\u043f\u043e\u0437\u043e\u043d:");
+
+        //---- comboBox1 ----
+        comboBox1.addItemListener(e -> comboBox1ItemStateChanged(e));
+
+        //---- comboBox3 ----
+        comboBox3.setEnabled(false);
 
         //---- label3 ----
         label3.setText("\u0413\u0440\u0443\u043f\u043f\u0430:");
@@ -137,13 +210,16 @@ public class ViewStatisticsForm extends JFrame {
         //---- label17 ----
         label17.setText("\u041f\u043e \u0441\u0442\u0443\u0434\u0435\u043d\u0442\u0443:");
 
+        //---- button1 ----
+        button1.setText("\u041f\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u043e\u0446\u0435\u043d\u043a\u0438");
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addGroup(contentPaneLayout.createParallelGroup()
                                 .addComponent(label1)
@@ -153,7 +229,9 @@ public class ViewStatisticsForm extends JFrame {
                                 .addGroup(contentPaneLayout.createSequentialGroup()
                                     .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(comboBox3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(comboBox3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(button1))
                                 .addComponent(label2)))
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addGroup(contentPaneLayout.createParallelGroup()
@@ -175,12 +253,6 @@ public class ViewStatisticsForm extends JFrame {
                                 .addComponent(textField5, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
                             .addGap(35, 35, 35)
                             .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(label11)
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addComponent(label15)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(textField10, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(comboBox6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addGroup(contentPaneLayout.createSequentialGroup()
                                     .addGroup(contentPaneLayout.createParallelGroup()
                                         .addComponent(label12)
@@ -204,7 +276,14 @@ public class ViewStatisticsForm extends JFrame {
                                             .addComponent(label14))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(textField9, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))))))
+                                            .addComponent(textField9, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(label15)
+                                        .addComponent(comboBox6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(label11))
+                                    .addGap(18, 18, 18)
+                                    .addComponent(textField10, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))))
                     .addContainerGap(25, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
@@ -218,7 +297,8 @@ public class ViewStatisticsForm extends JFrame {
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(comboBox3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(comboBox3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(button1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                         .addGroup(contentPaneLayout.createSequentialGroup()
@@ -323,5 +403,6 @@ public class ViewStatisticsForm extends JFrame {
     private JTextField textField10;
     private JLabel label16;
     private JLabel label17;
+    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

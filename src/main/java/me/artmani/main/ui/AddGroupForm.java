@@ -10,9 +10,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 
-/**
- * @author Allan
- */
 public class AddGroupForm extends JFrame {
     public AddGroupForm() {
         initComponents();
