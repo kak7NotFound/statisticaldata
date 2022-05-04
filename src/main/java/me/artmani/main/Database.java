@@ -8,7 +8,7 @@ public class Database {
 
     public Database() throws SQLException {
 
-        String url = "jdbc:sqlite:C:\\Users\\kak7\\Documents\\GitHub\\statisticaldata\\studentData.sqlite";
+        String url = "jdbc:sqlite:C:\\Users\\kaks\\Documents\\GitHub\\statisticaldata\\studentData.sqlite";
         connection = DriverManager.getConnection(url);
         connection.setAutoCommit(true);
     }

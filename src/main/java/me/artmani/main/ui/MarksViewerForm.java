@@ -7,6 +7,8 @@ package me.artmani.main.ui;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.table.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author unknown
@@ -15,7 +17,9 @@ public class MarksViewerForm extends JFrame {
 
     int group;
     String subject;
-    public MarksViewerForm(Integer group_, String subject_) {
+    String date;
+    public MarksViewerForm(Integer group_, String subject_, String date_) {
+        date = date_;
         group = group_;
         subject = subject_;
         initComponents();
@@ -23,7 +27,23 @@ public class MarksViewerForm extends JFrame {
     }
 
     public void setData(){
+        List<String> dates = new ArrayList<String>();
 
+        dates.add("");
+
+        List<ArrayList<String>> marks = new ArrayList<ArrayList<String>>();
+
+
+        table1.setModel(new DefaultTableModel(
+
+                new Object[][] {
+                        {"fae", "adsfg", "asfg"},
+                        {"asfgsaf", "asgsafd", "asfgfg"},
+                },
+                new String[] {
+                        "ass", "afsdgg", "afdsgafsdg"
+                }
+        ));
     }
 
     private void initComponents() {
@@ -39,15 +59,7 @@ public class MarksViewerForm extends JFrame {
         {
 
             //---- table1 ----
-            table1.setModel(new DefaultTableModel(
-                new Object[][] {
-                    {"asd", "asfasrfvf", "asdasd"},
-                    {"sassasta", "stagsatgastga", "asdasd"},
-                },
-                new String[] {
-                    null, null, null
-                }
-            ));
+            table1.setModel(new DefaultTableModel());
             scrollPane1.setViewportView(table1);
         }
 

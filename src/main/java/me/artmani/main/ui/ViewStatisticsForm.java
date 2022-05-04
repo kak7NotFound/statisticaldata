@@ -2,6 +2,7 @@ package me.artmani.main.ui;
 
 import lombok.SneakyThrows;
 import me.artmani.main.Main;
+import me.artmani.main.util.Calculation;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -15,6 +16,7 @@ public class ViewStatisticsForm extends JFrame {
 
     HashMap<String, ArrayList<String>> data = new HashMap<>();
     boolean hadInit = false;
+    boolean comboboxChanging = false;
 
     public ViewStatisticsForm() {
         initComponents();
@@ -71,7 +73,7 @@ public class ViewStatisticsForm extends JFrame {
         data.put("Месяц", (ArrayList<String>) params.clone());
         params.clear();
 
-        // диапозон
+        // Диапазон
         while (rs.next()) {
             var year = Integer.parseInt(rs.getString(1).split("\\.")[2]) + 1900;
             var month = Integer.parseInt(rs.getString(1).split("\\.")[1]);
@@ -86,7 +88,7 @@ public class ViewStatisticsForm extends JFrame {
 
         hadInit = true;
 
-        for (String a : new String[]{"Год", "Семестр", "Месяц", "Диапозон"}) {
+        for (String a : new String[]{"Год", "Семестр", "Месяц", "Диапазон"}) {
             comboBox1.addItem(a);
         }
 
@@ -101,7 +103,7 @@ public class ViewStatisticsForm extends JFrame {
     private void comboBox1ItemStateChanged(ItemEvent e) {
 
         if (!hadInit) return;
-
+        comboboxChanging = true;
         comboBox2.removeAllItems();
         button2.setEnabled(false);
         button2.setText("Начало");
@@ -117,17 +119,18 @@ public class ViewStatisticsForm extends JFrame {
             case "Месяц":
                 for (String d : data.get("Месяц")) comboBox2.addItem(d);
                 break;
-            case "Диапозон":
+            case "Диапазон":
                 button2.setEnabled(true);
                 button3.setEnabled(true);
                 break;
         }
+        comboboxChanging = false;
     }
 
     private void comboBox2ItemStateChanged(ItemEvent e) {
-        // диапозон сменился
+        // Диапазон сменился
         if (!hadInit) return;
-
+        if (comboboxChanging) return;
         refreshStatisticalData();
     }
 
@@ -166,6 +169,7 @@ public class ViewStatisticsForm extends JFrame {
         textField3.setText(rs.getString(1));
         textField4.setText(rs.getString(3));
         textField5.setText(rs.getString(5));
+        refreshStatisticalData();
     }
 
     private void button2Event(ActionEvent e) {
@@ -180,6 +184,7 @@ public class ViewStatisticsForm extends JFrame {
     private void checkBox1StateChanged(ChangeEvent e) {
         // show hidden
         comboBox6.removeAllItems();
+        comboBox6.addItem("Все");
         var subjects = new ArrayList<String>();
         ResultSet rs;
 
@@ -201,11 +206,12 @@ public class ViewStatisticsForm extends JFrame {
     @SneakyThrows
     private void comboBox6ItemStateChanged(ItemEvent e) {
         // subject changed
+        refreshStatisticalData();
+
         var rs = Main.getDatabase().getResultSet("select teacher from Subjects where title = '%s'".formatted(comboBox6.getSelectedItem()));
         if (rs.isClosed()) return;
 
         textField10.setText(rs.getString(1));
-        refreshStatisticalData();
     }
 
     @SneakyThrows
@@ -213,27 +219,65 @@ public class ViewStatisticsForm extends JFrame {
         String startDate = button2.getText();
         String endDate = button3.getText();
 
+        String subject = (String) comboBox6.getSelectedItem();
+        if (!(subject == null)){
+            if (subject.equals("Все")){
+                subject = "";
+            } else {
+                subject = "and subject = '%s'".formatted(subject);
+            }
+        } else {
+            subject = "";
+        }
+
         ResultSet rs;
         switch (comboBox1.getSelectedItem().toString()) {
-            case "Год":
-                textField6.setText(Main.getDatabase().getResultSet("select count(mark) from Marks where groupId = %s and date like '%s%s'"
-                        .formatted(comboBox4.getSelectedItem(), "%", (Integer.parseInt(comboBox2.getSelectedItem().toString())) - 1900)).getString(1).substring(0, 1));
-                textField7.setText(Main.getDatabase().getResultSet("select avg(mark) from Marks where groupId = %s and date like '%s%s'"
-                        .formatted(comboBox4.getSelectedItem(), "%", (Integer.parseInt(comboBox2.getSelectedItem().toString())) - 1900)).getString(1).substring(0, 1));
-                break;
-            case "Семестр":
-                break;
-            case "Месяц":
-                break;
-            case "Диапозон":
+            case "Год" -> {
+
+                textField6.setText(Main.getDatabase().getResultSet("select count(mark) from Marks where groupId = %s %s and date like '%s%s'"
+                        .formatted(comboBox4.getSelectedItem(), subject, "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900)).getString(1));
+                textField7.setText(Main.getDatabase().getResultSet("select avg(mark) from Marks where groupId = %s %s and date like '%s%s'"
+                        .formatted(comboBox4.getSelectedItem(), subject, "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900)).getString(1));
+                textField8.setText(Main.getDatabase().getResultSet("select count(mark) from Marks where student = '%s' %s and date like '%s%s'"
+                        .formatted(textField3.getText(), subject, "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900)).getString(1));
+                textField9.setText(Main.getDatabase().getResultSet("select avg(mark) from Marks where student = '%s' %s and date like '%s%s'"
+                        .formatted(textField3.getText(), subject, "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900)).getString(1));
+            }
+            case "Семестр" -> {
+                // todo add
+                StringBuilder queryAddition = new StringBuilder();
+                var date = comboBox2.getSelectedItem().toString();
+                for (String month : Calculation.getMonthRange(Main.getFirstSemesterDate(), Main.getSecondSemesterDate())) {
+                    queryAddition.append("and month = '01.%s.%s' ".formatted(month, (Integer.parseInt(date
+                            .substring(date.length() - 4)) - 1990)));
+                }
+                System.out.println(queryAddition);
+                String query = "select count(mark) from Marks where groupId = %s and date like '%s%s'"
+                        .formatted(textField3.getText(), "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900);
+                rs = Main.getDatabase().getResultSet(query);
+                if (rs.isClosed()) return;
+            }
+            case "Месяц" -> {
+                String dateString = comboBox2.getSelectedItem().toString().split("\\.")[0] + "." + (Integer.parseInt(comboBox2.getSelectedItem().toString().split("\\.")[1]) - 1900);
+                System.out.println(dateString);
+                textField6.setText(Main.getDatabase().getResultSet("select count(mark) from Marks where groupId = %s %s and date like '%s%s'"
+                        .formatted(comboBox4.getSelectedItem(), subject, "%", dateString)).getString(1));
+                textField7.setText(Main.getDatabase().getResultSet("select avg(mark) from Marks where groupId = %s and %s date like '%s%s'"
+                        .formatted(comboBox4.getSelectedItem(), subject, "%", dateString)).getString(1));
+                textField8.setText(Main.getDatabase().getResultSet("select count(mark) from Marks where student = '%s' %s and date like '%s%s'"
+                        .formatted(textField3.getText(), subject, "%", dateString)).getString(1));
+                textField9.setText(Main.getDatabase().getResultSet("select avg(mark) from Marks where student = '%s' %s and date like '%s%s'"
+                        .formatted(textField3.getText(), subject, "%", dateString)).getString(1));
+            }
+            case "Диапазон" -> {
                 startDate = button2.getText();
                 endDate = button3.getText();
-                break;
+            }
         }
     }
 
     private void button1Event(ActionEvent e) {
-        new MarksViewerForm(1, "a").setVisible(true);
+        new MarksViewerForm(1, "a", "a").setVisible(true);
     }
 
     private void initComponents() {
@@ -405,170 +449,170 @@ public class ViewStatisticsForm extends JFrame {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup()
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(label1)
+                                .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(32, 32, 32)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(button2)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(button3)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(button1))
+                                .addComponent(label2)))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(label3)
+                                .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label4)
+                                .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label5)
+                                .addComponent(textField2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label18)
+                                .addComponent(textField11, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
+                            .addGap(48, 48, 48)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label6)
+                                .addComponent(label8)
+                                .addComponent(textField4, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label7)
+                                .addComponent(textField3, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label9)
+                                .addComponent(textField5, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
+                            .addGap(35, 35, 35)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(label12)
+                                        .addComponent(textField7, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addComponent(label1)
-                                                        .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(32, 32, 32)
-                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(button2)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(button3)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addComponent(button1))
-                                                        .addComponent(label2)))
+                                            .addGap(1, 1, 1)
+                                            .addComponent(textField6, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(label10)
+                                        .addComponent(label16))
+                                    .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addComponent(label3)
-                                                        .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label4)
-                                                        .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label5)
-                                                        .addComponent(textField2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label18)
-                                                        .addComponent(textField11, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(48, 48, 48)
-                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label6)
-                                                        .addComponent(label8)
-                                                        .addComponent(textField4, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label7)
-                                                        .addComponent(textField3, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label9)
-                                                        .addComponent(textField5, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(35, 35, 35)
-                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addComponent(label12)
-                                                                        .addComponent(textField7, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addGap(1, 1, 1)
-                                                                                .addComponent(textField6, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
-                                                                        .addComponent(label10)
-                                                                        .addComponent(label16))
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addGap(15, 15, 15)
-                                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                                        .addComponent(label17)
-                                                                                        .addComponent(label13)))
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addComponent(textField8, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addGap(12, 12, 12)
-                                                                                .addComponent(label14))
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addComponent(textField9, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))))
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addComponent(label15)
-                                                                        .addComponent(label11))
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(textField10, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addComponent(comboBox6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(checkBox1)))
-                                                .addGap(5, 5, 5)))
-                                .addContainerGap(16, Short.MAX_VALUE))
+                                            .addGap(15, 15, 15)
+                                            .addGroup(contentPaneLayout.createParallelGroup()
+                                                .addComponent(label17)
+                                                .addComponent(label13)))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(textField8, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                            .addGap(12, 12, 12)
+                                            .addComponent(label14))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                            .addComponent(textField9, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(label15)
+                                        .addComponent(label11))
+                                    .addGap(18, 18, 18)
+                                    .addComponent(textField10, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addComponent(comboBox6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(checkBox1)))
+                            .addGap(5, 5, 5)))
+                    .addContainerGap(16, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
-                contentPaneLayout.createParallelGroup()
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label1)
+                        .addComponent(label2))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(button1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(button2)
+                        .addComponent(button3))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(label1)
-                                        .addComponent(label2))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(button1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(button2)
-                                        .addComponent(button3))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addComponent(label3)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(label11)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(comboBox6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(checkBox1))))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(label4)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(label3)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(comboBox4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(label5)
+                                            .addGap(6, 6, 6)
+                                            .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(label6, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(comboBox5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(label8)
+                                            .addGap(6, 6, 6)
+                                            .addComponent(textField4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(label11)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(comboBox6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(checkBox1))))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(contentPaneLayout.createParallelGroup()
+                                            .addGap(12, 12, 12)
+                                            .addComponent(label9)
+                                            .addGap(6, 6, 6)
+                                            .addComponent(textField5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(label4)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addComponent(label5)
-                                                                                .addGap(6, 6, 6)
-                                                                                .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addComponent(label8)
-                                                                                .addGap(6, 6, 6)
-                                                                                .addComponent(textField4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addGap(12, 12, 12)
-                                                                                .addComponent(label9)
-                                                                                .addGap(6, 6, 6)
-                                                                                .addComponent(textField5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addComponent(label18)
-                                                                                .addGap(6, 6, 6)
-                                                                                .addComponent(textField11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                        .addComponent(label10)
-                                                                        .addComponent(label13))
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                        .addComponent(textField6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(textField8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                        .addComponent(label12)
-                                                                        .addComponent(label14))
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                        .addComponent(textField7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(textField9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(label7)
-                                                        .addComponent(label15)
-                                                        .addComponent(textField10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(6, 6, 6)
-                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(textField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label16)
-                                                        .addComponent(label17))))
-                                .addContainerGap())
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(label18)
+                                            .addGap(6, 6, 6)
+                                            .addComponent(textField11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label10)
+                                        .addComponent(label13))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(textField6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(textField8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label12)
+                                        .addComponent(label14))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(textField7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(textField9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(label7)
+                                .addComponent(label15)
+                                .addComponent(textField10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(6, 6, 6)
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(textField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label16)
+                                .addComponent(label17))))
+                    .addContainerGap())
         );
         pack();
         setLocationRelativeTo(getOwner());

@@ -8,7 +8,7 @@ new FormModel {
 			"$verticalGroup": "par l {seq l {space :::p, comp calendar1:::p:175:p, space :::p, comp button1:::p:48:p, space ::13:x}}"
 		} ) {
 			name: "this"
-			"title": "Выбери диапозон"
+			"title": "Выбери Диапазон"
 			add( new FormComponent( "com.toedter.calendar.JCalendar" ) {
 				name: "calendar1"
 			} )

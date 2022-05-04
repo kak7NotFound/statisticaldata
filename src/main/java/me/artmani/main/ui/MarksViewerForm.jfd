@@ -12,34 +12,7 @@ new FormModel {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JTable" ) {
 					name: "table1"
-					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
-						add( new java.util.Vector {
-							add( "asd" )
-							add( "asfasrfvf" )
-							add( "asdasd" )
-						} )
-						add( new java.util.Vector {
-							add( "sassasta" )
-							add( "stagsatgastga" )
-							add( "asdasd" )
-						} )
-					}, new java.util.Vector {
-						add( null )
-						add( null )
-						add( null )
-					}, new java.util.Vector {
-						add( null )
-						add( null )
-						add( null )
-					}, new java.util.Vector {
-						add( null )
-						add( null )
-						add( null )
-					}, new java.util.Vector {
-						add( null )
-						add( null )
-						add( null )
-					} )
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector, new java.util.Vector )
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
