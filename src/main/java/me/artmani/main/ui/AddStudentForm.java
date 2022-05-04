@@ -82,10 +82,10 @@ public class AddStudentForm extends JFrame {
         var rs = Main.getDatabase().getResultSet("select * from Students where name = '%s' and groupId = %s".formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem()));
         if (rs.isClosed()) {
             Main.getDatabase().executeQuery("insert into Students (name, groupId, phoneNumber, birthday, homeAddress) VALUES ('%s', %s, '%s', '%s', '%s')"
-                    .formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem(), textField3.getText(), calendar1.getDate().getDay() + "." + calendar1.getDate().getMonth() + "." + (calendar1.getDate().getYear() + 1900), textField4.getText()));
+                    .formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem(), textField3.getText(), calendar1.getDate().getDate() + "." + calendar1.getDate().getMonth() + "." + (calendar1.getDate().getYear() + 1900), textField4.getText()));
         } else {
             Main.getDatabase().executeQuery("update Students set name = '%s', groupId = %s, phoneNumber = '%s', birthday = '%s', homeAddress = '%s' where name = '%s' and groupId = %s"
-                    .formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem(), textField3.getText(), calendar1.getDate().getDay() + "." + calendar1.getDate().getMonth() + "." + (calendar1.getDate().getYear() + 1900), textField4.getText(), comboBox6.getSelectedItem(), comboBox2.getSelectedItem()));
+                    .formatted(comboBox6.getSelectedItem(), comboBox2.getSelectedItem(), textField3.getText(), calendar1.getDate().getDate() + "." + calendar1.getDate().getMonth() + "." + (calendar1.getDate().getYear() + 1900), textField4.getText(), comboBox6.getSelectedItem(), comboBox2.getSelectedItem()));
         }
         refreshData();
     }

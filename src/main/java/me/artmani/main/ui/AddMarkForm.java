@@ -49,8 +49,8 @@ public class AddMarkForm extends JFrame {
 
     @SneakyThrows
     private void button1Event(ActionEvent e) {
-        Main.getDatabase().executeQuery("insert into Marks (student, mark, subject, date) values ('%s', %s, '%s', '%s')"
-                .formatted(comboBox4.getSelectedItem(), spinner1.getValue(), comboBox5.getSelectedItem(), (calendar2.getDate().getDate() + "." + calendar2.getDate().getMonth() + "." + calendar2.getDate().getYear())));
+        Main.getDatabase().executeQuery("insert into Marks (student, groupId, mark, subject, date) values ('%s', %s, %s, '%s', '%s')"
+                .formatted(comboBox4.getSelectedItem(), Integer.parseInt(comboBox3.getSelectedItem().toString()), spinner1.getValue(), comboBox5.getSelectedItem(), (calendar2.getDate().getDate() + "." + calendar2.getDate().getMonth() + "." + calendar2.getDate().getYear())));
     }
 
     private void initComponents() {

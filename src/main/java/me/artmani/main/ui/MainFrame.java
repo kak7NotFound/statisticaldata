@@ -41,7 +41,6 @@ public class MainFrame extends JFrame {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Allan
         button1 = new JButton();
         button2 = new JButton();
         label1 = new JLabel();
@@ -124,7 +123,6 @@ public class MainFrame extends JFrame {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Allan
     private JButton button1;
     private JButton button2;
     private JLabel label1;
