@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ViewStatisticsForm extends JFrame {
 
@@ -97,6 +98,7 @@ public class ViewStatisticsForm extends JFrame {
             comboBox4.addItem(rs.getString(1));
         }
 
+        button1.setEnabled(false);
 
     }
 
@@ -124,7 +126,10 @@ public class ViewStatisticsForm extends JFrame {
                 button3.setEnabled(true);
                 break;
         }
+        button1.setEnabled(comboBox1.getSelectedItem() == "Месяц" & comboBox6.getSelectedItem() != "Все");
+
         comboboxChanging = false;
+
     }
 
     private void comboBox2ItemStateChanged(ItemEvent e) {
@@ -208,6 +213,8 @@ public class ViewStatisticsForm extends JFrame {
         // subject changed
         refreshStatisticalData();
 
+        button1.setEnabled(comboBox1.getSelectedItem() == "Месяц" & comboBox6.getSelectedItem() != "Все");
+
         var rs = Main.getDatabase().getResultSet("select teacher from Subjects where title = '%s'".formatted(comboBox6.getSelectedItem()));
         if (rs.isClosed()) return;
 
@@ -251,7 +258,6 @@ public class ViewStatisticsForm extends JFrame {
                     queryAddition.append("and month = '01.%s.%s' ".formatted(month, (Integer.parseInt(date
                             .substring(date.length() - 4)) - 1990)));
                 }
-                System.out.println(queryAddition);
                 String query = "select count(mark) from Marks where groupId = %s and date like '%s%s'"
                         .formatted(textField3.getText(), "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900);
                 rs = Main.getDatabase().getResultSet(query);
@@ -259,10 +265,9 @@ public class ViewStatisticsForm extends JFrame {
             }
             case "Месяц" -> {
                 String dateString = comboBox2.getSelectedItem().toString().split("\\.")[0] + "." + (Integer.parseInt(comboBox2.getSelectedItem().toString().split("\\.")[1]) - 1900);
-                System.out.println(dateString);
                 textField6.setText(Main.getDatabase().getResultSet("select count(mark) from Marks where groupId = %s %s and date like '%s%s'"
                         .formatted(comboBox4.getSelectedItem(), subject, "%", dateString)).getString(1));
-                textField7.setText(Main.getDatabase().getResultSet("select avg(mark) from Marks where groupId = %s and %s date like '%s%s'"
+                textField7.setText(Main.getDatabase().getResultSet("select avg(mark) from Marks where groupId = %s %s and date like '%s%s'"
                         .formatted(comboBox4.getSelectedItem(), subject, "%", dateString)).getString(1));
                 textField8.setText(Main.getDatabase().getResultSet("select count(mark) from Marks where student = '%s' %s and date like '%s%s'"
                         .formatted(textField3.getText(), subject, "%", dateString)).getString(1));
@@ -277,7 +282,8 @@ public class ViewStatisticsForm extends JFrame {
     }
 
     private void button1Event(ActionEvent e) {
-        new MarksViewerForm(1, "a", "a").setVisible(true);
+
+        new MarksViewerForm(Integer.parseInt(comboBox4.getSelectedItem().toString()), comboBox6.getSelectedItem().toString(), comboBox2.getSelectedItem().toString()).setVisible(true);
     }
 
     private void initComponents() {
