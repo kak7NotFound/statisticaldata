@@ -77,7 +77,6 @@ public class AddGroupForm extends JFrame {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - Allan
         comboBox1 = new JComboBox();
         textField1 = new JTextField();
         label5 = new JLabel();
@@ -145,7 +144,6 @@ public class AddGroupForm extends JFrame {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Allan
     private JComboBox comboBox1;
     private JTextField textField1;
     private JLabel label5;
