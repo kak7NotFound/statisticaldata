@@ -89,7 +89,7 @@ public class ViewStatisticsForm extends JFrame {
 
         hadInit = true;
 
-        for (String a : new String[]{"Год", "Семестр", "Месяц", "Диапазон"}) {
+        for (String a : new String[]{"Год", "Семестр", "Месяц"/*, "Диапазон"*/}) {
             comboBox1.addItem(a);
         }
 
@@ -237,7 +237,6 @@ public class ViewStatisticsForm extends JFrame {
             subject = "";
         }
 
-        ResultSet rs;
         switch (comboBox1.getSelectedItem().toString()) {
             case "Год" -> {
 
@@ -251,17 +250,65 @@ public class ViewStatisticsForm extends JFrame {
                         .formatted(textField3.getText(), subject, "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900)).getString(1));
             }
             case "Семестр" -> {
-                // todo add
-                StringBuilder queryAddition = new StringBuilder();
-                var date = comboBox2.getSelectedItem().toString();
-                for (String month : Calculation.getMonthRange(Main.getFirstSemesterDate(), Main.getSecondSemesterDate())) {
-                    queryAddition.append("and month = '01.%s.%s' ".formatted(month, (Integer.parseInt(date
-                            .substring(date.length() - 4)) - 1990)));
+                var a = comboBox2.getSelectedItem().toString().split(" ");
+                ArrayList<String> parsedDates = new ArrayList<String>();
+                switch (a[0] + " " + a[1]){
+                    case "Семестр 1" -> {
+                        String[] d = new String[]{"9", "10", "11", "12", "1"};
+                        for (var dd: d){
+                            parsedDates.add(dd + "." + (Integer.parseInt(a[2]) - 1900));
+                        };
+                    }
+                    case "Семестр 2" -> {
+                        String[] d = new String[]{"2", "3", "4", "5", "6"};
+                        for (var dd: d){
+                            parsedDates.add(dd + "." + (Integer.parseInt(a[2]) - 1900));
+                        };
+                    }
                 }
-                String query = "select count(mark) from Marks where groupId = %s and date like '%s%s'"
-                        .formatted(textField3.getText(), "%", (Integer.parseInt((String) comboBox2.getSelectedItem())) - 1900);
-                rs = Main.getDatabase().getResultSet(query);
-                if (rs.isClosed()) return;
+
+                ArrayList<Integer> marksGroup = new ArrayList<>();
+                ArrayList<Integer> marksStudent = new ArrayList<>();
+
+                for (var parsedDate: parsedDates){
+                    var rs = Main.getDatabase().getResultSet("select mark from Marks where groupId = %s %s and date like '%s%s'"
+                            .formatted(comboBox4.getSelectedItem(), subject, "%", parsedDate));
+                    while (rs.next()){
+                        marksGroup.add(Integer.parseInt(rs.getString(1)));
+                    }
+
+
+                    rs = Main.getDatabase().getResultSet("select mark from Marks where student = '%s' %s and date like '%s%s'"
+                            .formatted(textField3.getText(), subject, "%", parsedDate));
+
+                    while (rs.next()){
+                        marksStudent.add(Integer.parseInt(rs.getString(1)));
+                    }
+
+
+                }
+                var marksGroupSize = marksGroup.size();
+                textField6.setText(marksGroupSize+"");
+
+                if (marksGroup.size() != 0){
+                    float c = 0;
+                    for (int i = 0; i < marksGroup.size() - 1; i++) {
+                        c = c + marksGroup.get(i);
+                    }
+                    textField7.setText(("" + (c / marksGroupSize)));
+                } else {textField7.setText("0");}
+
+                textField8.setText(marksStudent.size()+"");
+
+                if (marksStudent.size() != 0){
+                    float cc = 0;
+                    for (int i = 0; i < marksStudent.size() - 1; i++) {
+                        cc = cc + marksStudent.get(i);
+                    }
+                    System.out.println((marksStudent.size() + cc +"" + (marksStudent.size() / cc)));
+                    textField9.setText(("" + (cc / marksStudent.size())));
+                } else textField9.setText("0");
+
             }
             case "Месяц" -> {
                 String dateString = comboBox2.getSelectedItem().toString().split("\\.")[0] + "." + (Integer.parseInt(comboBox2.getSelectedItem().toString().split("\\.")[1]) - 1900);

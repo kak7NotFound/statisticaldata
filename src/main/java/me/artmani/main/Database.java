@@ -1,6 +1,10 @@
 package me.artmani.main;
 
-import java.sql.*;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Database {
 
@@ -8,7 +12,12 @@ public class Database {
 
     public Database() throws SQLException {
 
-        String url = "jdbc:sqlite:C:\\Users\\kaks\\Documents\\GitHub\\statisticaldata\\studentData.sqlite";
+        File f = new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile();
+        var url = "jdbc:sqlite:" + f + "\\studentData.sqlite";
+        // раскомmентить если в intellij idea
+//        url = "jdbc:sqlite:C:\\Users\\kaks\\Documents\\GitHub\\statisticaldata\\studentData.sqlite";
+        System.out.println(url);
+
         connection = DriverManager.getConnection(url);
         connection.setAutoCommit(true);
     }
@@ -20,7 +29,6 @@ public class Database {
     public ResultSet getResultSet(String query) throws SQLException {
         return connection.createStatement().executeQuery(query);
     }
-
 
 }
 
