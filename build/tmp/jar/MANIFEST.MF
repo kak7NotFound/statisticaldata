@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: me.artmani.main.Main
+Class-Path: /libs/a.jar
+

@@ -4,13 +4,16 @@
 
 package me.artmani.main.ui;
 
+import java.awt.event.*;
 import lombok.SneakyThrows;
 import me.artmani.main.Main;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * @author unknown
@@ -34,22 +37,23 @@ public class MarksViewerForm extends JFrame {
     @SneakyThrows
     public void setData() {
 
-        List<String> marks = new ArrayList<String>();
+        String tempDate = date;
         List<String> dates = new ArrayList<String>();
         List<String> students = new ArrayList<String>();
 
         var splitDate = date.split("\\.");
-        date = splitDate[0] + "." + (Integer.parseInt(splitDate[1]) - 1900);
+        if (Integer.parseInt(splitDate[1]) - 1900 < 0) return;
+        tempDate = splitDate[0] + "." + (Integer.parseInt(splitDate[1]) - 1900);
 
-        System.out.println("select student, date from Marks where groupId = %s and subject = '%s' and date like '%s%s'"
-                .formatted(group, subject, "%" ,date));
         var rs = Main.getDatabase().getResultSet("select student, date from Marks where groupId = %s and subject = '%s' and date like '%s%s'"
-                .formatted(group, subject, "%" , date ));
+                .formatted(group, subject, "%" , tempDate ));
 
         if (rs.isClosed()) System.out.println("rs closed");
 
+        dates.add("");
+
         while (rs.next()) {
-            System.out.println(rs.getString(1) + " " + rs.getString(2));
+
             if (!(students.contains(rs.getString(1)))) {
                 students.add(rs.getString(1));
             }
@@ -59,22 +63,54 @@ public class MarksViewerForm extends JFrame {
             }
         }
 
-        for (String student : students) {
-            marks.add(student);
-            rs = Main.getDatabase().getResultSet("select mark from Marks where groupId = %s and subject = '%s' and student = '%s' and date like '%s%s'"
-                    .formatted(group, subject, student, "%", date));
-            if (rs.isClosed()) continue;
-            while (rs.next()) {
-                marks.add(rs.getString(1));
-            }
 
+        var model = new DefaultTableModel(
+                new Object[][]{},
+                dates.toArray()
+        );
+
+        for (String student: students){
+
+            ArrayList<String> marks = new ArrayList<String>();
+            marks.add(student);
+            for (String dateFromDates: dates) {
+                if (dateFromDates.equals(""))continue;
+
+                rs = Main.getDatabase().getResultSet("select mark from Marks where groupId = %s and subject = '%s' and student = '%s' and date = '%s'"
+                        .formatted(group, subject, student, dateFromDates + "." +tempDate.split("\\.")[1]));
+
+                if (rs.isClosed()) marks.add("");
+
+                while (rs.next()) {
+                    marks.add(rs.getString(1));
+                }
+            }
+            model.addRow(marks.toArray());
+            marks.clear();
         }
 
-        table1.setModel(new DefaultTableModel(
-        new Object[][]{},
-                dates.toArray()
-                /*new Object[]{"ads", "asd", "asd"}*/
-        ));
+        table1.setModel(model);
+    }
+
+    private void button3Event(ActionEvent e) {
+        new AddMarkForm().setVisible(true);
+    }
+
+    private void thisWindowGainedFocus(WindowEvent e) {
+        setData();
+    }
+
+    @SneakyThrows
+    private void button2Event(ActionEvent e) {
+        var mark = table1.getModel().getValueAt( table1.getSelectedRow(), table1.getSelectedColumn());
+        var selectedDate = table1.getModel().getColumnName(table1.getSelectedColumn());
+        var student = table1.getModel().getValueAt(table1.getSelectedRow(), 0);
+        Main.getDatabase().executeQuery("delete from Marks where mark = %s and date = '%s' and student = '%s'".formatted(mark.toString(), selectedDate+"."+(Integer.parseInt(date.split("\\.")[1]) - 1900), student.toString()));
+        setData();
+    }
+
+    private void button1Event(ActionEvent e) {
+        dispose();
     }
 
     private void initComponents() {
@@ -86,6 +122,12 @@ public class MarksViewerForm extends JFrame {
         button3 = new JButton();
 
         //======== this ========
+        addWindowFocusListener(new WindowAdapter() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                thisWindowGainedFocus(e);
+            }
+        });
         var contentPane = getContentPane();
 
         //======== scrollPane1 ========
@@ -93,17 +135,21 @@ public class MarksViewerForm extends JFrame {
 
             //---- table1 ----
             table1.setModel(new DefaultTableModel());
+            table1.setCellSelectionEnabled(true);
             scrollPane1.setViewportView(table1);
         }
 
         //---- button1 ----
         button1.setText("\u0417\u0430\u043a\u0440\u044b\u0442\u044c");
+        button1.addActionListener(e -> button1Event(e));
 
         //---- button2 ----
         button2.setText("\u0423\u0434\u0430\u043b\u0438\u0442\u044c");
+        button2.addActionListener(e -> button2Event(e));
 
         //---- button3 ----
         button3.setText("\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c");
+        button3.addActionListener(e -> button3Event(e));
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -120,7 +166,7 @@ public class MarksViewerForm extends JFrame {
                     .addComponent(button2)
                     .addGap(66, 66, 66)
                     .addComponent(button3)
-                    .addContainerGap(172, Short.MAX_VALUE))
+                    .addContainerGap(164, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
